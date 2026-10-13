@@ -93,8 +93,9 @@ The Purview DLP policy was successfully applied to the Exchange Online routing i
 * **User Experience:** Triggered an active DLP Policy Tip within the Outlook Web App (OWA), notifying the user of the compliance violation.
 * **Enforcement:** A hard block was executed, preventing the transmission of the message.
 
-> **[🖼️ INSERT Evidence-01_DLP-Policy-Tip-Trigger.jpg HERE]**
-> **[🖼️ INSERT Evidence-02_Exchange-Client-Side-Send-Block.jpg HERE]**
+![Evidence-1](https://github.com/sachinpatil-soc/BaFin-Aligned-DLP-Exfiltration-Defense/blob/6be8934a8a4510a3950b3a045111c97b87ae5aae/screenshot/Evidence-01_DLP-Policy-Tip-Trigger.jpg)
+
+![Evidence-02](https://github.com/sachinpatil-soc/BaFin-Aligned-DLP-Exfiltration-Defense/blob/6be8934a8a4510a3950b3a045111c97b87ae5aae/screenshot/Evidence-02_Exchange-Client-Side-Send-Block.jpg)
 
 
 ### 3. Engineering Constraints Overcome
