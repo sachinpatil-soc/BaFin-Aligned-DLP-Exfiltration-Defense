@@ -103,7 +103,7 @@ The Purview DLP policy was successfully applied to the Exchange Online routing i
 To simulate an insider threat attempting to bypass file-level restrictions, I attempted to copy the raw BaFin-classified text from the local document (`Client_Financial_Data.txt.txt`) and paste it into an unsanctioned, third-party web application (Pastebin).
 * **Enforcement:** The Microsoft Defender endpoint sensor hooked the clipboard process in real-time, recognized the custom SIT payload within the system memory, and actively blocked the copy operation before the data could hit the browser.
 
-![clipbord.png](https://github.com/sachinpatil-soc/BaFin-Aligned-DLP-Exfiltration-Defense/blob/8911012eb17ce7909acbd2e146ff1a08716c55f0/screenshot/clipbord.png)
+![clipbord.png](https://github.com/sachinpatil-soc/BaFin-Aligned-DLP-Exfiltration-Defense/blob/d0f7bcd79aa8ccf5bae555590d2748a55af0deb6/screenshot/Clipboard.png)
 
 ---
 
