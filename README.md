@@ -75,7 +75,7 @@ Before deploying to endpoints, DLP logic must be validated against the Purview c
 
 I generated a BaFin test document and ran it through the Purview SIT Cloud Tester. The engine successfully parsed the dictionary and triggered a **High Confidence** match across 8 unique proprietary keywords.
 
-> **[🖼️ INSERT SCREENSHOT HERE: The Purview Cloud Test showing "High - 8 unique matches"]**
+![Unique-keywords-8](https://github.com/sachinpatil-soc/BaFin-Aligned-DLP-Exfiltration-Defense/blob/3d5c975e348a17e1c7dbc46ee3eefc79dd9eb262/screenshot/cloud-tedection.png)
 
 ---
 
@@ -85,7 +85,7 @@ Executing Endpoint DLP in a virtualized lab environment introduces enterprise-le
 ### 1. The USB Egress Block
 The policy successfully synced to the local Windows Defender sensor, intercepting the transfer of BaFin-classified `.txt` and `.pdf` files to external drives.
 
-> **[🖼️ INSERT SCREENSHOT HERE: The Windows toast notification showing the USB transfer being blocked]**
+![USB transfer blocked](https://github.com/sachinpatil-soc/BaFin-Aligned-DLP-Exfiltration-Defense/blob/3d5c975e348a17e1c7dbc46ee3eefc79dd9eb262/screenshot/credit-card.png) 
 
 
 * ### 2. Exchange Online Data Exfiltration Block
