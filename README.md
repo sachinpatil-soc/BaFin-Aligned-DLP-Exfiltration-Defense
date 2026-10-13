@@ -12,61 +12,41 @@ Designed to align with German banking regulations (BaFin/BAIT) and strict data s
 
 ---
 
-# BaFin-Aligned Data Leakage Prevention (DLP): Multi-Vector Egress Monitoring & Rule Tuning
-
-## 📌 Project Overview
-This project demonstrates the design, deployment, and tuning of an enterprise Data Leakage Prevention (DLP) architecture using **Microsoft Purview** and **Microsoft Sentinel**.
-
-Designed to align with German banking regulations (BaFin/BAIT) and strict data secrecy (Bankgeheimnis), this lab models the detection, blocking, and SIEM investigation of sensitive financial data egress.
-
-**Core Focus:** Transitioning from raw alerts to actionable intelligence by optimizing DLP rules to reduce false positives, navigating virtualized hardware abstraction, and executing Tier-1 SOC investigations via KQL.
-
----
-
 ## 🏗️ Architecture Diagram
+
 ```mermaid
 graph TD
-    %% Local Infrastructure
-    subgraph "Local Environment (macOS Host)"
-        subgraph "Virtualization (UTM/QEMU)"
-            EP["💻 Windows 11 Endpoint (ARM64)"]
-        end
-        USB["💽 Removable Media (USB)"]
+    subgraph Local_Environment [Local Environment]
+        EP["💻 Windows 11 (ARM64)"]
+        USB["💽 USB Drive"]
+        Web["🌐 External Browser"]
     end
 
-    %% Cloud Identity & Sensor
-    subgraph "Microsoft Cloud & Security"
-        Entra["🔑 Microsoft Entra ID"]
+    subgraph Microsoft_Cloud [Microsoft Cloud Security]
+        Entra["🔑 Entra ID"]
         Defender["🛡️ Defender for Endpoint"]
+        Purview["🎯 Purview Portal"]
+        SIT["⚙️ Custom SIT (BaFin)"]
+        Policy["📜 DLP Policy"]
     end
 
-    %% Purview Compliance
-    subgraph "Microsoft Purview (Data Security)"
-        Purview["🎯 Purview Compliance Portal"]
-        SIT["⚙️ Custom SIT: BaFin (SEC-DACH-FIN)"]
-        Policy["📜 Endpoint DLP Policy"]
+    subgraph SOC_Operations [Security Operations]
+        SIEM["🚨 Sentinel / Defender XDR"]
     end
 
-    %% SOC & SIEM
-    subgraph "Security Operations (SOC)"
-        SIEM["🚨 Microsoft Sentinel / XDR (Incident Response)"]
-    end
-
-    %% Workflows
-    EP -->|Onboarded via Script| Defender
-    EP -->|Joined| Entra
+    EP -->|"Onboards to"| Defender
+    EP -->|"Joins"| Entra
     
-    Purview -->|Defines Classification| SIT
-    SIT -->|Triggers| Policy
-    Policy -->|Pushes Rule Dictionary| Defender
-    Defender -->|Enforces Engine Locally| EP
+    Purview -->|"Defines"| SIT
+    SIT -->|"Triggers"| Policy
+    Policy -->|"Pushes Dictionary"| Defender
+    Defender -->|"Enforces Rules Locally"| EP
 
-    EP -->|Attempted Egress| USB
-    EP -->|Attempted Clipboard Paste| Web["🌐 External App / Browser"]
+    EP -->|"Attempted File Transfer"| USB
+    EP -->|"Attempted Clipboard Paste"| Web
 
-    USB -.->|Blocked by Endpoint DLP| Defender
-    Web -.->|Blocked by Endpoint DLP| Defender
+    USB -.->|"Intercepts & Blocks"| Defender
+    Web -.->|"Intercepts & Blocks"| Defender
 
-    Defender -->|Raw Alerts & Telemetry| SIEM
-    Purview -->|Compliance Events| SIEM
---
+    Defender -->|"Raw Alerts"| SIEM
+    Purview -->|"Compliance Logs"| SIEM
