@@ -83,7 +83,7 @@ I generated a BaFin test document and ran it through the Purview SIT Cloud Teste
 Executing Endpoint DLP in a virtualized lab environment introduces enterprise-level hardware abstraction challenges that mirror complex VDI (Virtual Desktop Infrastructure) deployments. 
 
 ### 1. The USB Egress Block
-The policy successfully synced to the local Windows Defender sensor, intercepting the transfer of BaFin-classified `.txt` and `.pdf` files to external drives.
+The policy successfully synced to the local Windows Defender sensor, intercepting the transfer of highly confidential classification test files (.txt) to external drives.
 
 ![USB transfer blocked](https://github.com/sachinpatil-soc/BaFin-Aligned-DLP-Exfiltration-Defense/blob/3d5c975e348a17e1c7dbc46ee3eefc79dd9eb262/screenshot/credit-card.png) 
 
@@ -97,8 +97,17 @@ The Purview DLP policy was successfully applied to the Exchange Online routing i
 
 ![Evidence-02](https://github.com/sachinpatil-soc/BaFin-Aligned-DLP-Exfiltration-Defense/blob/6be8934a8a4510a3950b3a045111c97b87ae5aae/screenshot/Evidence-02_Exchange-Client-Side-Send-Block.jpg)
 
+---
 
-### 3. Engineering Constraints Overcome
+### 3. Endpoint Clipboard Interception (Web Paste)
+To simulate an insider threat attempting to bypass file-level restrictions, I attempted to copy the raw BaFin-classified text from the local document (`Client_Financial_Data.txt.txt`) and paste it into an unsanctioned, third-party web application (Pastebin).
+* **Enforcement:** The Microsoft Defender endpoint sensor hooked the clipboard process in real-time, recognized the custom SIT payload within the system memory, and actively blocked the copy operation before the data could hit the browser.
+
+![clipbord.png](https://github.com/sachinpatil-soc/BaFin-Aligned-DLP-Exfiltration-Defense/blob/8911012eb17ce7909acbd2e146ff1a08716c55f0/screenshot/clipbord.png)
+
+---
+
+### 4. Engineering Constraints Overcome
 When engineering endpoint policies, understanding infrastructure limitations is critical. During this deployment, two specific architectural constraints were identified and documented:
 
 * **Hardware Abstraction:** Bypassed UTM/QEMU hypervisor limitations where virtualized USBs mount as internal fixed disks (`QEMU HARDDRIVE`).
