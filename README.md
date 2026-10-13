@@ -4,9 +4,9 @@
 This project demonstrates the design, deployment, and tuning of an enterprise Data Leakage Prevention (DLP) architecture using **Microsoft Purview** and **Microsoft Sentinel**. 
 
 Designed to align with German banking regulations (BaFin/BAIT) and strict data secrecy (*Bankgeheimnis*), this lab models the detection, blocking, and SIEM investigation of sensitive financial data egress across three critical vectors:
-1. **Email (Exchange Online)**
+1. **Email (Exchange Online / Outlook Policy Tips )**
 2. **Endpoint Removable Storage (USB)**
-3. **Unsanctioned Web Uploads (Cloud/Browser)**
+3. **Unsanctioned Web Uploads & Clipboard Actions**
 
 **Core Focus:** Transitioning from raw alerts to actionable intelligence by optimizing DLP rules to reduce false positives and documenting Tier-1 SOC investigations.
 
@@ -88,8 +88,17 @@ The policy successfully synced to the local Windows Defender sensor, interceptin
 > **[🖼️ INSERT SCREENSHOT HERE: The Windows toast notification showing the USB transfer being blocked]**
 
 
-### 2. Engineering Constraints Overcome
-"When engineering endpoint policies, understanding infrastructure limitations is critical. During this deployment, two specific architectural constraints were identified and documented:
+* ### 2. Exchange Online Data Exfiltration Block
+The Purview DLP policy was successfully applied to the Exchange Online routing infrastructure. When a user attempted to email a BaFin-classified document to external domains (Yahoo/Gmail), the action was immediately intercepted. 
+* **User Experience:** Triggered an active DLP Policy Tip within the Outlook Web App (OWA), notifying the user of the compliance violation.
+* **Enforcement:** A hard block was executed, preventing the transmission of the message.
+
+> **[🖼️ INSERT Evidence-01_DLP-Policy-Tip-Trigger.jpg HERE]**
+> **[🖼️ INSERT Evidence-02_Exchange-Client-Side-Send-Block.jpg HERE]**
+
+
+### 3. Engineering Constraints Overcome
+When engineering endpoint policies, understanding infrastructure limitations is critical. During this deployment, two specific architectural constraints were identified and documented:
 
 * **Hardware Abstraction:** Bypassed UTM/QEMU hypervisor limitations where virtualized USBs mount as internal fixed disks (`QEMU HARDDRIVE`).
 * **Propagation SLAs:** Accounted for Microsoft's standard 24-hour sync delay for newly compiled Custom SIT dictionaries to reach local endpoint sensors.
