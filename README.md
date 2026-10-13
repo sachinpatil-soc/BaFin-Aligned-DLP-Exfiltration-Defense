@@ -115,19 +115,21 @@ When engineering endpoint policies, understanding infrastructure limitations is 
 
 ---
 
-## 🔍 SIEM Integration & Threat Hunting (KQL)
-Engineered a Kusto Query Language (KQL) script to transition from passive alerting to active SOC threat hunting inside Microsoft Defender XDR.
+## 🔍 Phase 4: SIEM Integration & Threat Hunting (KQL)
+To transition from passive alerting to active SOC threat hunting, I utilized **Kusto Query Language (KQL)** within Microsoft Defender XDR. 
 
+Due to standard cloud ingestion delays in non-production tenants, exact DLP rule match telemetry can be delayed. To adapt, I engineered a broad hunting query targeting the `DeviceEvents` table to track all file-level telemetry and interactions with the classified BaFin payloads across the endpoint.
+
+**Advanced Hunting Query:**
 ```kusto
-// Hunt for BaFin Endpoint DLP Block Events
+// Broad Hunt: Track BaFin Payload Activity and DLP Events
 DeviceEvents
-| where ActionType == "DlpRuleMatch"
-| extend DlpPolicy = tostring(parse_json(AdditionalFields).DlpPolicyName)
-| extend SensitiveInfoType = tostring(parse_json(AdditionalFields).SensitiveInformationType)
-| where SensitiveInfoType contains "SEC-DACH-FIN"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, DlpPolicy
+| where Timestamp > ago(5h)
+| where ActionType contains "Dlp" or AdditionalFields contains "SEC-DACH-FIN" or FileName contains "Client_Financial_Data"
+| project Timestamp, DeviceName, ActionType, FileName, AdditionalFields
 | sort by Timestamp desc
 ```
+![](https://github.com/sachinpatil-soc/BaFin-Aligned-DLP-Exfiltration-Defense/blob/fac1b489b8dea39d8a6a6b9a1617f39953d14ae5/screenshot/evidence-05_threat-hunting-kql.png)
 
 ---
 ## 🔐 Regulatory Compliance & Data Masking Notice
