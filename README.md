@@ -87,21 +87,38 @@ The policy successfully synced to the local Windows Defender sensor, interceptin
 
 > **[🖼️ INSERT SCREENSHOT HERE: The Windows toast notification showing the USB transfer being blocked]**
 
-### 2. Environmental Constraints & Engineering Workarounds
-As a DLP engineer, understanding infrastructure limitations is critical. During this deployment, two specific architectural constraints were identified and documented:
 
-* **Hardware Virtualization Bypass (UTM/QEMU):** Virtual hypervisors frequently pass physical USB drives through to the guest OS as block devices (`QEMU HARDDRIVE`). Because Windows natively mounts these as non-removable internal disks, the Purview `Removable USB` trigger is initially bypassed. This required tuning the hypervisor's USB passthrough settings to ensure the OS recognized the removable bus.
-* **Microsoft Custom Dictionary Propagation SLAs:** While built-in SITs (like SSNs or IBANs) trigger immediately upon policy creation, Microsoft Purview requires up to **24 hours** to compile Custom SIT dictionaries (like our BaFin keywords) and push them to local Defender endpoint sensors. This SLA must be factored into enterprise deployment timelines.
+### 2. Engineering Constraints Overcome
+"When engineering endpoint policies, understanding infrastructure limitations is critical. During this deployment, two specific architectural constraints were identified and documented:
 
----
-
-## 🔍 Phase 4: SIEM Integration & Threat Hunting
-*(Add a brief sentence or two here if you have Sentinel screenshots showing the DLP alerts hitting your SIEM dashboard. If not, you can remove this section or state that alerts are successfully logging to the Microsoft 365 Defender unified portal for incident response).*
+* **Hardware Abstraction:** Bypassed UTM/QEMU hypervisor limitations where virtualized USBs mount as internal fixed disks (`QEMU HARDDRIVE`).
+* **Propagation SLAs:** Accounted for Microsoft's standard 24-hour sync delay for newly compiled Custom SIT dictionaries to reach local endpoint sensors.
 
 ---
 
-## 💡 Conclusion & Key Takeaways
-This project validates that a successfully deployed Microsoft Purview architecture can enforce strict, regional compliance regulations (BaFin) at the hardware level. By mastering custom classification dictionaries, understanding endpoint sync propagation delays, and accounting for VDI hardware abstraction, an organization can effectively secure sensitive data without disrupting standard business operations.
+## 🔍 SIEM Integration & Threat Hunting (KQL)
+Engineered a Kusto Query Language (KQL) script to transition from passive alerting to active SOC threat hunting inside Microsoft Defender XDR.
+
+```kusto
+// Hunt for BaFin Endpoint DLP Block Events
+DeviceEvents
+| where ActionType == "DlpRuleMatch"
+| extend DlpPolicy = tostring(parse_json(AdditionalFields).DlpPolicyName)
+| extend SensitiveInfoType = tostring(parse_json(AdditionalFields).SensitiveInformationType)
+| where SensitiveInfoType contains "SEC-DACH-FIN"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, DlpPolicy
+| sort by Timestamp desc
+```
+
+---
+## 🔐 Regulatory Compliance & Data Masking Notice
+In accordance with BAIT (Bankaufsichtliche Anforderungen an die IT) guidelines and strict operational security (OPSEC) principles, this simulation was executed entirely within a sandboxed, non-production Microsoft 365 tenant. 
+
+To maintain strict data privacy and simulate real-world Bankgeheimnis (banking secrecy) controls, the following sanitization measures were applied to this documentation:
+* All financial payloads, DACH keywords, and `SEC-DACH-FIN` markers are purely synthetic (dummy data).
+* Microsoft tenant IDs, Entra Object IDs, and Purview workspace identifiers have been fully redacted.
+* Endpoint hardware identifiers, hostnames, and routing data are obfuscated.
+* No actual Personally Identifiable Information (PII) or real-world client financial data was processed, queried, or exfiltrated during this engineering cycle.
 
 
 
