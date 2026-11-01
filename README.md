@@ -141,6 +141,13 @@ To maintain strict data privacy and simulate real-world Bankgeheimnis (banking s
 * Endpoint hardware identifiers, hostnames, and routing data are obfuscated.
 * No actual Personally Identifiable Information (PII) or real-world client financial data was processed, queried, or exfiltrated during this engineering cycle.
 
+---
+🗺️ Phase 5: Future Roadmap (Information Protection & Lifecycle)
+While Phase 1-4 successfully validated the active interception of custom SITs via Endpoint and Exchange DLP, the next phase of this lab focuses on long-term data governance:
+
+* Data Classification: Deploying automated Sensitivity Labels (e.g., "Confidential - BaFin") to encrypt documents at rest.
+* Retention Policies (Aufbewahrung): Implementing Purview Data Lifecycle Management to enforce legal holds on financial records and automate disposition workflows, mitigating long-term Insider Risk.
+
 
 
 
